@@ -56,7 +56,7 @@ public class Cell  {
 		LineRenderer lr = tempLine.GetComponent<LineRenderer>();
         //lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
         lr.material = new Material(Shader.Find("GUI/Text Shader"));
-		lr.startColor = Color.red;
+		lr.startColor = Color.green;
 		lr.endColor = Color.yellow;
 		lr.startWidth = 0.1f;
 		lr.endWidth = 0.1f;

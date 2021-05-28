@@ -10,8 +10,8 @@ public class Lines : MonoBehaviour {
 	public   float cellWidth;
 	public  int canvasHight;
 	public   float cellHight;
-	public GameObject Zombie;
-	public GameObject brain;
+	public GameObject Player;
+	public GameObject Gate;
 	public GameObject StartingText;
 	public GameObject Finishing1Text;
 	public GameObject Finishing2Text;
@@ -101,15 +101,16 @@ public class Lines : MonoBehaviour {
 		AlgorithmType = 0;
 		startofDrawingBacktrackSolution = new Vector3 (((canvasWidth / 2) - ((target_col-1) * cellWidth)) - (cellWidth / 2), ((this.canvasHight / 2) - ((target_row-1) * this.cellHight)) - (cellHight / 2), 0.0f);
 		StartofDrawingDijkstra=new Vector3 (((canvasWidth / 2) - ((begain_col-1) * cellWidth)) - (cellWidth / 2), ((this.canvasHight / 2) - ((begain_row-1) * this.cellHight)) - (cellHight / 2), 0.0f);
-		brain.transform.localScale = new Vector3 (cellWidth, cellHight, 0.0f);
-		brain.transform.position=new Vector3 (((canvasWidth / 2) - ((target_col-1) * cellWidth)) - (cellWidth / 2), ((this.canvasHight / 2) - ((target_row-1) * this.cellHight)) - (cellHight / 2), 0.0f);
-		Zombie.transform.localScale = new Vector3 (cellWidth, cellHight, 0.0f);
-		Zombie.transform.position = new Vector3(((canvasWidth / 2) - ((begain_col-1) * cellWidth)) - (cellWidth / 2), ((this.canvasHight / 2) - ((begain_row-1) * this.cellHight)) - (cellHight / 2), 0.0f);
-		brain.SetActive (false);
-		Zombie.SetActive (false);
+		Gate.transform.localScale = new Vector3 (cellWidth, cellHight, 0.0f);
+		Gate.transform.position=new Vector3 (((canvasWidth / 2) - ((target_col-1) * cellWidth)) - (cellWidth / 2), ((this.canvasHight / 2) - ((target_row-1) * this.cellHight)) - (cellHight / 2), 0.0f);
+		Player.transform.localScale = new Vector3 (cellWidth, cellHight, 0.0f);
+		Player.transform.position = new Vector3(((canvasWidth / 2) - ((begain_col-1) * cellWidth)) - (cellWidth / 2), ((this.canvasHight / 2) - ((begain_row-1) * this.cellHight)) - (cellHight / 2), 0.0f);
+		Gate.SetActive (false);
+		Player.SetActive (false);
 	}
 	void Start () {
-		Zombie.transform.localScale = new Vector3(8f, 8f, 8f);
+		Player.transform.localScale = new Vector3(8f, 8f, 8f);
+		Gate.transform.localScale = new Vector3(2, 2, 2);
 		apply = false;
 		menu = false;
         playerMode = false;
@@ -146,8 +147,8 @@ public class Lines : MonoBehaviour {
 			Application.targetFrameRate = MazeGeneratefps;
 			DrawTheMaze ();
 			if (mazeFinished) {
-				brain.SetActive (true);
-				Zombie.SetActive (true);
+				Gate.SetActive (true);
+				Player.SetActive (true);
 				StartingText.gameObject.SetActive (true);
 				Menu.SetActive (true);
                 PlayModeMenu.SetActive(true);
@@ -328,7 +329,7 @@ public class Lines : MonoBehaviour {
 		lr.endWidth = 0.1f;
 		lr.SetPosition(0, start);
 		lr.SetPosition(1, end);
-		Zombie.transform.position = end;
+		Player.transform.position = end;
 	}
     int [] RandomArray()
     {
@@ -755,7 +756,7 @@ public class Lines : MonoBehaviour {
         PlayModeMenu.SetActive(!x);
         if (x)
         {
-            Zombie.transform.position= new Vector3(((canvasWidth / 2) - ((begain_col-1) * cellWidth)) - (cellWidth / 2), ((this.canvasHight / 2) - ((begain_row-1) * this.cellHight)) - (cellHight / 2), 0.0f);
+			Player.transform.position= new Vector3(((canvasWidth / 2) - ((begain_col-1) * cellWidth)) - (cellWidth / 2), ((this.canvasHight / 2) - ((begain_row-1) * this.cellHight)) - (cellHight / 2), 0.0f);
             Clear();
             StartingText.SetActive(false);
         }
@@ -763,11 +764,11 @@ public class Lines : MonoBehaviour {
     IEnumerator Win()
     {
         Congratz.SetActive(true);
-        brain.SetActive(false);
+        Gate.SetActive(false);
         playerMode = false;
         yield return new WaitForSeconds(2);
-        Congratz.SetActive(false);
-        brain.SetActive(true);
+        //Congratz.SetActive(false);
+		Gate.SetActive(true);
         setPlayerMode(false);
     }
 	public void Right()
@@ -810,5 +811,23 @@ public class Lines : MonoBehaviour {
 			Vector3 EndPlayerMode = new Vector3(((canvasWidth / 2) - ((playerModeRow) * cellWidth)) - (cellWidth / 2), ((this.canvasHight / 2) - ((playerModeColumn) * this.cellHight)) - (cellHight / 2), 0.0f);
 			DrawLine(StartPlayerMode, EndPlayerMode, Color.cyan, overLine++);
 		}
+	}
+	public void setPlayerMode1(bool x)
+	{
+		LeanTween.delayedCall(10f, () =>
+		{
+			playerMode = x;
+			Stop.SetActive(x);
+			playerModeRow = begain_row - 1;
+			playerModeColumn = begain_col - 1;
+			Menu.SetActive(!x);
+			PlayModeMenu.SetActive(!x);
+			if (x)
+			{
+				Player.transform.position = new Vector3(((canvasWidth / 2) - ((begain_col - 1) * cellWidth)) - (cellWidth / 2), ((this.canvasHight / 2) - ((begain_row - 1) * this.cellHight)) - (cellHight / 2), 0.0f);
+				Clear();
+				StartingText.SetActive(false);
+			}
+		});
 	}
 }
